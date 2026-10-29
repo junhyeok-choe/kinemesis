@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Error types. Validation errors carry a machine-readable code and a JSON Pointer path."""
 
 from __future__ import annotations

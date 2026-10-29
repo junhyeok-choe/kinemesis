@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Command-line interface: a thin wrapper over ``kinemesis.api``."""
 
 from __future__ import annotations

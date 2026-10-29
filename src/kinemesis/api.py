@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Stable Python facade. The CLI and any future front-end call only this module."""
 
 from __future__ import annotations

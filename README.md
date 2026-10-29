@@ -1,6 +1,6 @@
 # kinemesis
 
-> **Status: pre-alpha, planning only. No engine code exists yet.** Name confirmed by the maintainer on 2026-10-29: **kinemesis** (kinema + mimesis). Intended package names: distribution `kinemesis`, import `kinemesis`, CLI `kinemesis` (nothing is published to PyPI yet).
+> **Status: pre-alpha. The API, file format and command line are unstable and will change without notice.** The M1 slice (rig FK, keyframes, SVG) exists; IK, bend/arc segments, raster output and interchange are not built yet. Name confirmed by the maintainer on 2026-10-29: **kinemesis** (kinema + mimesis). Intended package names: distribution `kinemesis`, import `kinemesis`, CLI `kinemesis` (nothing is published to PyPI yet).
 
 Kinemesis (κίνημα + μίμησις) — μια ανεξάρτητη μηχανή 2D κίνησης για αρθρωτές φιγούρες: καθαρή, ντετερμινιστική και ελεύθερη, ώστε κάθε στιγμή της κίνησης να μπορεί να υπολογιστεί, να ελεγχθεί και να αναπαραχθεί.
 

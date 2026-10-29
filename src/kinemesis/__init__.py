@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """kinemesis: deterministic 2D rig animation engine (pre-alpha)."""
 
 __version__ = "0.0.1.dev0"

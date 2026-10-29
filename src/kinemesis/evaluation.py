@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Time -> scene evaluation. ``evaluate`` is a pure function of (project, time)."""
 
 from __future__ import annotations

@@ -1,6 +1,6 @@
 # Audit A: StykAnimate-App document model, native serialization, validation
 
-Repo: /tmp/claude-1000/-home-ubuntu-junhyeok-choe-gsel/92c3e784-38e3-4bbc-a193-90307707caf6/scratchpad/upstream/StykAnimate-App @ def97214. Paths below are relative to it. Tags: V = [VERIFIED-in-code], D = [DOCUMENTED-only], I = [INFERRED].
+Repo: upstream checkout @ def97214. Paths below are relative to it. Tags: V = [VERIFIED-in-code], D = [DOCUMENTED-only], I = [INFERRED].
 
 ## 0. Headline findings
 - The "native document" is an in-memory JSON object that is the Pivot decoder's schema (`version` 2-5, `figure_types`, `keyframes`, `backgrounds`) plus a `_styk` extension namespace. There is no separate StykAnimate schema. [V] src/pivot/model.mjs:145-170; src/demo.mjs:39-44

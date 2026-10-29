@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Evaluated, immutable scene: backend-neutral geometry for one instant. Never persisted."""
 
 from __future__ import annotations

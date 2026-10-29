@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Standalone SVG backend (standard library only). Deterministic text output."""
 
 from __future__ import annotations

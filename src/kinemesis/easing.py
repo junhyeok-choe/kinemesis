@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Easing curves mapping elapsed fraction t in [0, 1] to progress."""
 
 from __future__ import annotations

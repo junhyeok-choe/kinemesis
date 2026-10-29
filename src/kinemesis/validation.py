@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Semantic validation of a ``Project``. Returns every issue found, with JSON Pointer paths."""
 
 from __future__ import annotations

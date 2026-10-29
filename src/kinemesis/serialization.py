@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Canonical JSON (de)serialization with strict or lenient unknown-field handling.
 
 Strict (default): unknown fields are errors (``unknown_field``). Lenient: unknown fields are kept

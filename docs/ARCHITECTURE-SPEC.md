@@ -1,21 +1,23 @@
 # Independent Python 2D Animation Engine — Architecture Investigation and Proposal
 
+> **Provenance of this document.** Written during the planning session (2026-10-29) that preceded the code in this repository. "The maintainer" below is the repository owner who approved decisions D1–D5; earlier drafts called this person "the maintainer". Files referred to as living in a "scratchpad" were private working files; their content is now in `docs/investigation/` and `fixtures/upstream-oracle/`. Names used before the project was named (`theia`, `animcore`) are superseded by **kinemesis**. Section 11 records what M1 actually implemented.
+
 Status: **DRAFT FOR INDEPENDENT REVIEW. Nothing here is an approved project decision, except those listed under "Approved decisions" below.**
 
-Approved decisions (recorded from the user's own messages):
-- **D1 — Licence: GPL-3.0-or-later** for the Engine (approved by the user, 2026-10-29). **D4 — project name: CLOSED, `kinemesis`** (see naming note below; the following sentence is the superseded earlier state): D4 in §8 was **mostly decided**: the user chose the plain name **`theia`** (2026-10-29: "just theia") — i.e. the user rejected the proposed `theia-anim`/`theia_anim` suffix names. Treat as: project = `theia`, import package = `theia`, CLI = `theia`. **Open consequence:** the PyPI *distribution* name `theia` is held by an unrelated 2018 log-aggregator package (2 releases, 2018-05-21 and 2018-06-18) [V]; options: (1) request the name via PEP 541 (abandoned-project process; outcome not guaranteed, nothing requested), (2) publish under a different distribution name while keeping import/CLI `theia`, (3) distribute from source until resolved. Repo location still unconfirmed (proposal: `/home/ubuntu/junhyeok-choe/gsel/theia`). The project's vision statement is to be written in Greek (see "Vision" below). Everywhere in this document, "the Engine" / `animcore` placeholder = theia.
+Approved decisions (recorded from the maintainer's own messages):
+- **D1 — Licence: GPL-3.0-or-later** for the Engine (approved by the maintainer, 2026-10-29). **D4 — project name: CLOSED, `kinemesis`** (see naming note below; the following sentence is the superseded earlier state): D4 in §8 was **mostly decided**: the maintainer chose the plain name **`theia`** (2026-10-29: "just theia") — i.e. the maintainer rejected the proposed `theia-anim`/`theia_anim` suffix names. Treat as: project = `theia`, import package = `theia`, CLI = `theia`. **Open consequence:** the PyPI *distribution* name `theia` is held by an unrelated 2018 log-aggregator package (2 releases, 2018-05-21 and 2018-06-18) [V]; options: (1) request the name via PEP 541 (abandoned-project process; outcome not guaranteed, nothing requested), (2) publish under a different distribution name while keeping import/CLI `theia`, (3) distribute from source until resolved. Repo location still unconfirmed (proposal: `/home/ubuntu/junhyeok-choe/gsel/theia`). The project's vision statement is to be written in Greek (see "Vision" below). Everywhere in this document, "the Engine" / `animcore` placeholder = theia.
 
-**Vision (Greek, draft — user to review):**
-> Θεία — μια ανεξάρτητη μηχανή 2D κίνησης για αρθρωτές φιγούρες: καθαρή, ντετερμινιστική και ελεύθερη, ώστε κάθε στιγμή της κίνησης να μπορεί να υπολογιστεί, να ελεγχθεί και να αναπαραχθεί.
+**Vision (Greek, draft — needs review by a native speaker):**
+> Kinemesis — μια ανεξάρτητη μηχανή 2D κίνησης για αρθρωτές φιγούρες: καθαρή, ντετερμινιστική και ελεύθερη, ώστε κάθε στιγμή της κίνησης να μπορεί να υπολογιστεί, να ελεγχθεί και να αναπαραχθεί.
 >
-> (English gloss: *Theia — an independent 2D animation engine for articulated figures: clean, deterministic and free, so that every instant of motion can be computed, verified and reproduced.*)
-- **D5 — Python versions:** develop and test primarily on **3.14**; keep the **core** (`model`, `io`, `eval`, `kinematics`, `scene`, SVG render, `api`, `cli`) compatible with **3.12**; the upstream container importer may require 3.14 (stdlib `compression.zstd`) (approved by the user, 2026-10-29).
-- **D3 — Compatibility scope:** upstream-equivalence claims target **native keyframe FK and tween only** for M1–M2; upstream container import (`.styk/.stkz`) at M3; upstream extensions (Both-mode IK/`bendReference`, Auto easing, rigs, layer sheet, etc.) are **deferred** (approved by the user, 2026-10-29).
-- **D2 — Run upstream Node code in an isolated, no-network sandbox to generate oracle vectors** (approved by the user, 2026-10-29; executed — see §10).
+> (English gloss: *Kinemesis — an independent 2D animation engine for articulated figures: clean, deterministic and free, so that every instant of motion can be computed, verified and reproduced.*)
+- **D5 — Python versions:** develop and test primarily on **3.14**; keep the **core** (`model`, `io`, `eval`, `kinematics`, `scene`, SVG render, `api`, `cli`) compatible with **3.12**; the upstream container importer may require 3.14 (stdlib `compression.zstd`) (approved by the maintainer, 2026-10-29).
+- **D3 — Compatibility scope:** upstream-equivalence claims target **native keyframe FK and tween only** for M1–M2; upstream container import (`.styk/.stkz`) at M3; upstream extensions (Both-mode IK/`bendReference`, Auto easing, rigs, layer sheet, etc.) are **deferred** (approved by the maintainer, 2026-10-29).
+- **D2 — Run upstream Node code in an isolated, no-network sandbox to generate oracle vectors** (approved by the maintainer, 2026-10-29; executed — see §10).
 Date: 2026-10-29. Scope: investigation and planning only; no engine code was written.
 Working name used below: **"the Engine"** (package placeholder `animcore`; the real name is an open decision, see §8).
 
-> **Naming note (2026-10-29, later than the rest of this document):** the project name is **kinemesis** (confirmed by the user; kinema + mimesis). Intended: distribution/import/CLI `kinemesis`; repository `junhyeok-choe/kinemesis` (private); local directory `kinemesis`. Wherever this document says `theia`, `animcore` or `kinema`, read "kinemesis" — those were earlier candidates/placeholders. Checked 2026-10-29: `kinemesis` is free on PyPI, npm, crates.io and as a GitHub user/exact repo name (`kinemesis.com` has DNS). Empty placeholder packages are not an acceptable way to claim a PyPI name (PEP 541 treats them as name squatting); the name is claimed by the first real release. The PEP 541 request for `theia` is **no longer needed**.
+> **Naming note (2026-10-29, later than the rest of this document):** the project name is **kinemesis** (confirmed by the maintainer; kinema + mimesis). Intended: distribution/import/CLI `kinemesis`; repository `junhyeok-choe/kinemesis` (private); local directory `kinemesis`. Wherever this document says `theia`, `animcore` or `kinema`, read "kinemesis" — those were earlier candidates/placeholders. Checked 2026-10-29: `kinemesis` is free on PyPI, npm, crates.io and as a GitHub user/exact repo name (`kinemesis.com` has DNS). Empty placeholder packages are not an acceptable way to claim a PyPI name (PEP 541 treats them as name squatting); the name is claimed by the first real release. The PEP 541 request for `theia` is **no longer needed**.
 
 ## 0. How to read this document
 
@@ -31,9 +33,9 @@ Every statement carries one of these tags. Reviewers should challenge the tagged
 | **[?]** | Unknown / not investigated. |
 
 Supporting evidence files (raw subagent audits, tagged per claim, with `file:line`):
-`audit-A-model.md` (document model, serialization), `audit-B-kinematics.md` (FK/IK/constraints), `audit-C-timeline.md` (time, easing, evaluation), all in the same scratchpad directory as this file.
+`audit-A-model.md` (document model, serialization), `audit-B-kinematics.md` (FK/IK/constraints), `audit-C-timeline.md` (time, easing, evaluation), now in `docs/investigation/`.
 
-Context from the user's uploaded chat log (`StykAnimate…pdf`): the user's stated intent is a Python-ported engine **kept separate from Manim, made Manim-compatible only**, leaving combined use to the end user; they also asked whether GPL forces source disclosure on distribution. [V — read from the PDF]
+Context from the maintainer's planning notes (not included in this repository): the stated intent is a Python-ported engine **kept separate from Manim, made Manim-compatible only**, leaving combined use to the end user; they also asked whether GPL forces source disclosure on distribution. [V — read from the PDF]
 
 ---
 
@@ -79,7 +81,7 @@ Directly read/ran by lead: README, AGENTS.md, THIRD_PARTY_NOTICES, LICENSE head,
 ### 1.4 Reference-oracle executability
 
 - Static analysis [V-agent]: `ik.mjs` and `keyframe-easing.mjs` import no DOM; the evaluator closure of `pivot/geometry.mjs` is ≈76–78 non-locale modules with DOM use only inside draw/offscreen paths; upstream's own `node --test` suite imports `geometry.mjs` under plain Node. `src/demo.mjs` (`emptyDocument`, `createObject`, `createFrame`) builds synthetic documents.
-- **Executed after user approval of D2 (see §10).** Initially the permission classifier denied running upstream JS and I did not circumvent it; the user then authorized sandboxed execution. Result: `keyframe-easing.mjs`, `ik.mjs`, `demo.mjs` and `pivot/geometry.mjs` import and run under plain Node v25.2.1 with **no `npm ci`** (only `node:` builtins are imported). [V]
+- **Executed after maintainer approval of D2 (see §10).** Initially the permission classifier denied running upstream JS and I did not circumvent it; the maintainer then authorized sandboxed execution. Result: `keyframe-easing.mjs`, `ik.mjs`, `demo.mjs` and `pivot/geometry.mjs` import and run under plain Node v25.2.1 with **no `npm ci`** (only `node:` builtins are imported). [V]
 - **An oracle proves "equals StykAnimate @ def97214", not "equals Pivot".** [V-agent: PIVOT_PARITY unchecked items]
 - Fixture availability: upstream tests that exercise real Pivot behavior need an **undistributed corpus** (`../Pivot Animator v5/Animations/*.piv`, Akane projects) and skip when absent. Self-contained synthetic tests exist (`tests/native-tween-sampling.test.mjs` carries its own PCHIP reference sampler; `keyframe-easing.test.mjs` has exact bezier values 0.3153568125725393 / 0.6846431874274608 / 0.1291619310473198). [V-agent]
 
@@ -190,7 +192,7 @@ Data ownership:
 - **Caches** (if any, later) live inside `eval`/`render` keyed by a project revision hash; they must never alter results (tested by cache-on/off equality).
 - Future GUI/agent interfaces mutate a `Project` only through validated operations that the `api` exposes; the *command/patch format* is **reserved but undesigned** (open item for review, not implemented in M1).
 
-Separation of the user's stated capabilities:
+Separation of the maintainer's stated capabilities:
 - **Character animation/kinematics** = `kinematics` + `model.Rig` + pose tracks.
 - **General motion graphics** (paths, text, masks, compositions) = new `model` node kinds + new `scene` drawables; the **scene graph node has a `kind` discriminator** from day one, but only `rig_figure` and `shape` kinds exist in M1. [P]
 - **Rendering independent of Manim** = `render` backends consume only `scene`.
@@ -238,7 +240,7 @@ Separation of the user's stated capabilities:
 
 | Path | Consequence |
 | --- | --- |
-| **Translating upstream code (any language) = adaptation** | Resulting file is a derivative work. Rewriting JS→Python does **not** remove the original copyright. Under GPLv3 the Engine (or at least the combined work conveyed) must be licensed GPLv3(+), keep upstream copyright/licence notices, state modifications with dates (§5a), and provide Corresponding Source to recipients when **conveying** (distributing). Private use or non-distributed internal use does not trigger source disclosure; network-service use does not trigger it under GPLv3 (AGPL differs). Answer to the user's chat question: yes, on distribution recipients must receive source under GPL; there is no obligation for purely private use. |
+| **Translating upstream code (any language) = adaptation** | Resulting file is a derivative work. Rewriting JS→Python does **not** remove the original copyright. Under GPLv3 the Engine (or at least the combined work conveyed) must be licensed GPLv3(+), keep upstream copyright/licence notices, state modifications with dates (§5a), and provide Corresponding Source to recipients when **conveying** (distributing). Private use or non-distributed internal use does not trigger source disclosure; network-service use does not trigger it under GPLv3 (AGPL differs). Answer to the maintainer's chat question: yes, on distribution recipients must receive source under GPL; there is no obligation for purely private use. |
 | **Independent reimplementation from behavior/public algorithms** | Ideas, algorithms, mathematical facts, file-format facts are not protected; specific expression is. Textbook leaf algorithms (CSS cubic-bezier, smoothstep, law-of-cosines IK, FABRIK, PCHIP) can be written from public sources. Design-specific choices in upstream (e.g., "Both" bend hysteresis thresholds 0.02/0.04/0.002, `bendReference` schema, `_styk*` field layouts, Smart Stretch semantics) are the riskiest to reproduce. |
 | **Clean-room caveat (important)** | **This investigation session read upstream source.** Anything implemented from this session's context is *not* clean-room. A permissive-licence claim would require a documented clean-room procedure (spec writer who reads code; separate implementer who sees only the behavioral spec and oracle vectors) and ideally counsel. |
 | Oracle vectors | Numeric outputs of running upstream are facts about behavior, but they come from executing GPL software on inputs built with its builders; keep them in a separate `fixtures/` tree with provenance (commit, command, date) and treat licensing of generated fixtures conservatively (assume GPL-compatible distribution only until counsel says otherwise). |
@@ -247,9 +249,9 @@ Separation of the user's stated capabilities:
 | Provenance record | Maintain `PROVENANCE.md`: for each module, source of semantics (public spec / upstream behavior vector / own design) and whether upstream code was consulted. |
 
 ### 4.3 Decision D1 — APPROVED: GPL-3.0-or-later
-The user approved **GPL-3.0-or-later** for the Engine. Consequences [P unless noted]:
+The maintainer approved **GPL-3.0-or-later** for the Engine. Consequences [P unless noted]:
 - No clean-room procedure is required; the clean-room caveats in §4.2 become informational. Direct translation of upstream leaf routines is *permitted*, but every such file must carry the upstream copyright/licence notice, a modification notice with date (GPLv3 §5a), and a `PROVENANCE.md` entry naming the upstream file and commit (`def97214…`). Preference remains to implement from public references where equivalent, to keep the codebase small and self-designed.
-- Ship the full GPLv3 text as `LICENSE`, set `license = "GPL-3.0-or-later"` (SPDX) in `pyproject.toml`, add `SPDX-License-Identifier: GPL-3.0-or-later` headers to every source file, and add a copyright line for the new project's author(s) (holder name: user to supply).
+- Ship the full GPLv3 text as `LICENSE`, set `license = "GPL-3.0-or-later"` (SPDX) in `pyproject.toml`, add `SPDX-License-Identifier: GPL-3.0-or-later` headers to every source file, and add a copyright line for the new project's author(s) (holder name: to be supplied by the maintainer; not yet added).
 - Dependencies must be GPLv3-compatible. MIT, BSD, MIT-CMU, ISC, Apache-2.0 are compatible. LGPL-2.1 (pycairo) is compatible for dynamic use. Do not bundle FFmpeg; invoke a user-installed binary.
 - The Manim adapter stays a separate distribution. Anyone distributing it together with the Engine distributes under GPL; Manim (MIT) imposes no obstacle.
 - Does not by itself approve D2–D5, any compatibility claim, or the use of upstream branding (still prohibited).
@@ -321,7 +323,7 @@ Deliver, nothing more:
 6. `api` + `cli` (`validate`, `evaluate`, `render --frame/--time`, `schema`).
 7. Tests: unit + hypothesis + golden SVG + serialization round-trip + (if M0 oracle ran) FK/easing oracle vectors via an upstream→Engine **test-only converter**.
 Out of scope for M1: IK, bend/curves, joins, GUI, MCP, Manim, motion graphics, upstream container import, video, effects.
-Exit criteria: every §5.4 row relevant to M1 has a passing executed test; `import animcore` pulls no third-party modules (checked by test); the SVG output of the demo figure walks across 3 poses reproducibly on 3 OSes.
+Exit criteria: every §5.4 row relevant to M1 has a passing executed test; `import kinemesis` pulls no third-party modules (checked by test); the SVG output of the demo figure walks across 3 poses reproducibly on 3 OSes.
 
 ### M2 — Kinematics depth  [P]
 Bend/arc segments (with oracle vectors for bends in tweens and joins — the C2 gaps listed in §10 within the D3 scope); 2-bone analytic IK (Left/Right) + explicit `bend_side` data (no hidden state); n-chain FABRIK; reach/stretch rules; angle limits as *new* Engine feature (upstream has none) only if approved. Per D3, IK is validated by property tests and the §10 sanity vectors; **no upstream IK-compatibility claim**.
@@ -340,7 +342,7 @@ Command/patch layer over `Project` (validated operations) as the common substrat
 
 ---
 
-## 7. Reviewer focus list (not user decisions)
+## 7. Reviewer focus list (not maintainer decisions)
 
 1. Is the canonical time model (integer timebase + rational sampling) over-engineered relative to "fps integer ticks"? Does it break importer simplicity?
 2. y-up internal convention vs y-down native: is the conversion layer worth it for Manim identity mapping?
@@ -353,17 +355,17 @@ Command/patch layer over `Project` (validated operations) as the common substrat
 
 ---
 
-## 8. Open Design Decisions requiring user approval
+## 8. Open Design Decisions requiring maintainer approval
 
 | ID | Decision | Options | Recommendation [P] |
 | --- | --- | --- | --- |
-| **D1** | **Licence of the new Engine** | **APPROVED by user: GPL-3.0-or-later** (alternatives considered: permissive with clean-room process) | Closed. See §4.3. |
-| **D2** | **Authorize running upstream code (Node, pinned commit, isolated sandbox) to generate oracle vectors** | **APPROVED by user ("Allow sandboxed")** and executed | Closed. See §10. Re-running at a different upstream commit or with new inputs falls under the same authorization only if it keeps the same sandbox constraints. |
-| **D3** | **Compatibility scope** | **APPROVED by user:** (i) L-A native keyframe FK/tween equivalence only for M1–M2; (ii) container import (C0/C1) at M3; (iii) StykAnimate extensions deferred | Closed. Consequence: IK built in M2 is an Engine feature validated by properties and sanity vectors, **with no upstream-compatibility claim**; Both-mode IK, Auto easing, rigs, layer sheet remain out of compat scope until a new decision. |
-| **D4** | **Project name, repository location and identity** | **Name: `theia` — APPROVED by user.** Remaining: (a) PyPI/import names; (b) repo location. Facts [V, checked 2026-10-29]: PyPI project `theia` already exists (v0.9.2, "a lightweight log aggregator"), so the distribution name `theia` is **unavailable**; `theia-anim` and `theiaanim` returned 404 (free); no GitHub Python+animation repo named like it found. [I] "Eclipse Theia" is a well-known IDE project; not verified here, so avoid confusing search/branding overlap (tagline "theia — 2D rig animation engine"). | (a) distribution `theia-anim`, import package **`theia_anim`** (an import named `theia` would collide with the existing PyPI `theia` package if both are installed); CLI command `theia`. (b) New directory `/home/ubuntu/junhyeok-choe/gsel/theia` (sibling of the other repos there), `git init` only after confirmation. No StykAnimate branding. |
-| **D5** | **Python version floor** | **APPROVED by user: 3.14 target, 3.12 core** (alternatives: 3.14 only; 3.11+ for Manim's floor) | Closed. Consequences: `requires-python = ">=3.12"` for the core distribution; CI matrix = 3.12 and 3.14 × Linux/macOS/Windows; no 3.13+/3.14-only syntax or stdlib in core (e.g., no `compression.zstd`, no PEP 649 deferred annotations, no template strings, no `except` without parentheses); the M3 importer declares its 3.14 requirement (or an optional `zstandard` fallback on 3.12 — decide at M3); the Manim adapter is a separate distribution that may use Manim's own ≥3.11 floor intersected with 3.12. |
+| **D1** | **Licence of the new Engine** | **APPROVED by the maintainer: GPL-3.0-or-later** (alternatives considered: permissive with clean-room process) | Closed. See §4.3. |
+| **D2** | **Authorize running upstream code (Node, pinned commit, isolated sandbox) to generate oracle vectors** | **APPROVED by the maintainer ("Allow sandboxed")** and executed | Closed. See §10. Re-running at a different upstream commit or with new inputs falls under the same authorization only if it keeps the same sandbox constraints. |
+| **D3** | **Compatibility scope** | **APPROVED by the maintainer:** (i) L-A native keyframe FK/tween equivalence only for M1–M2; (ii) container import (C0/C1) at M3; (iii) StykAnimate extensions deferred | Closed. Consequence: IK built in M2 is an Engine feature validated by properties and sanity vectors, **with no upstream-compatibility claim**; Both-mode IK, Auto easing, rigs, layer sheet remain out of compat scope until a new decision. |
+| **D4** | **Project name, repository location and identity** | **CLOSED: `kinemesis`** (kinema + mimesis), chosen by the maintainer. Earlier candidates `theia`, `kinema`, `aetheia`, `daidala`, … were rejected or superseded (PyPI `theia` is held by an unrelated 2018 package). Distribution/import/CLI name: `kinemesis`; repository `junhyeok-choe/kinemesis`. | Checked 2026-10-29: `kinemesis` is free on PyPI, npm and crates.io. Empty placeholder packages are not an acceptable way to claim a PyPI name (PEP 541 treats them as name squatting); the name is claimed by a real first release. |
+| **D5** | **Python version floor** | **APPROVED by the maintainer: 3.14 target, 3.12 core** (alternatives: 3.14 only; 3.11+ for Manim's floor) | Closed. Consequences: `requires-python = ">=3.12"` for the core distribution; CI matrix = 3.12 and 3.14 × Linux/macOS/Windows; no 3.13+/3.14-only syntax or stdlib in core (e.g., no `compression.zstd`, no PEP 649 deferred annotations, no template strings, no `except` without parentheses); the M3 importer declares its 3.14 requirement (or an optional `zstandard` fallback on 3.12 — decide at M3); the Manim adapter is a separate distribution that may use Manim's own ≥3.11 floor intersected with 3.12. |
 
-Not requested of the user: library choices, module names, tolerance values — these are for the independent review.
+Not requested of the maintainer: library choices, module names, tolerance values — these are for the independent review.
 
 ---
 
@@ -371,14 +373,14 @@ Not requested of the user: library choices, module names, tolerance values — t
 
 - Investigation actions: cloned upstream into the session scratchpad (read-only use); read docs and key source; dispatched three read-only subagents for the model/serialization, kinematics, and timeline audits; probed Python 3.14 library resolution with `uv` in a scratch venv; verified `compression.zstd`.
 - After D2 approval: ran a bounded oracle spike (§10) in a `unshare -rn` + `node --permission` sandbox, writing only to the scratchpad. Upstream checkout stayed clean.
-- Not done: no Pivot corpus or `.styk` sample available; no project repository exists, so no planning files were added to the user's workspace. This spec and the three audits remain in the scratchpad.
+- Not done: no Pivot corpus or `.styk` sample available; no project repository existed at the time, so the planning files were first kept outside any repository; they were added here afterwards.
 - Nothing committed, pushed, or published.
 
 ---
 
 ## 10. Oracle spike results (executed after D2 approval)  — all findings [V] unless noted
 
-Scope: a bounded **verification spike**, not engine code. Artifacts in `scratchpad/oracle/` (`gen_vectors.mjs`, `analyze.py`, `smoke.mjs`, `out/vectors.json`, `out/analysis.json`, `out/SHA256SUMS`, `PROVENANCE.md`). Sandbox: `unshare -rn` (no network) + `node --permission` (read-only fs, no child processes/workers), Node v25.2.1, Linux x86_64 (WSL2). Upstream checkout unmodified (`git status` clean) at `def97214…`. The vectors cover: 7 bezier curves × 12 sample points, 6 easing modes, 4 `autoValue` cases, 14 `shortest` inputs, 14 IK cases (2-bone, 3-bone, 4-bone; bend ±1), 11 FK documents (chains of depth 1–20, unordered tree, scale 0.5/2/−1, curved segments, coordinates ≈1e5), 12 native tween documents (linear/constant/ease-in/ease-out/auto/bezier, wraps at 170°/π/−π/3π, duration 1, zero-duration mid key).
+Scope: a bounded **verification spike**, not engine code. Artifacts in `fixtures/upstream-oracle/` (`gen_vectors.mjs`, `analyze.py`, `smoke.mjs`, `out/vectors.json`, `out/analysis.json`, `out/SHA256SUMS`, `PROVENANCE.md`). Sandbox: `unshare -rn` (no network) + `node --permission` (read-only fs, no child processes/workers), Node v25.2.1, Linux x86_64 (WSL2). Upstream checkout unmodified (`git status` clean) at `def97214…`. The vectors cover: 7 bezier curves × 12 sample points, 6 easing modes, 4 `autoValue` cases, 14 `shortest` inputs, 14 IK cases (2-bone, 3-bone, 4-bone; bend ±1), 11 FK documents (chains of depth 1–20, unordered tree, scale 0.5/2/−1, curved segments, coordinates ≈1e5), 12 native tween documents (linear/constant/ease-in/ease-out/auto/bezier, wraps at 170°/π/−π/3π, duration 1, zero-duration mid key).
 Independent Python reimplementations (written from the formulas, not from upstream code, though IK sign convention and the float32 rounding point were taken from what I had read) were compared with the vectors:
 
 | Question | Result |
@@ -404,11 +406,11 @@ Consequences for the plan:
 
 ## 11. M1 implementation status (2026-10-29, written after implementation; supersedes planning text where they differ)
 
-The user authorized starting implementation immediately after approving D1–D5 and the skeleton commit (the independent architecture review requested in the original brief has **not** happened; M1 is therefore provisional and should be reviewed with this spec).
+The maintainer authorized starting implementation immediately after approving D1–D5 and the skeleton commit (the independent architecture review requested in the original brief has **not** happened; M1 is therefore provisional and should be reviewed with this spec).
 
 Implemented in `src/kinemesis/` (zero runtime dependencies; Python 3.12 and 3.14 tested): `model`, `validation`, `serialization` (+ `schema`), `angles`, `easing`, `timeutil`, `kinematics`, `evaluation`, `scene`, `render/svg`, `api`, `cli`, `compat/pivot32`. 85 tests pass on 3.12.3 and 3.14.2, `ruff` and `mypy --strict` clean.
 
-Deviations from the proposal, and decisions made while implementing (all reviewable, none user-approved):
+Deviations from the proposal, and decisions made while implementing (all reviewable, none maintainer-approved):
 - Module named `evaluation` (not `eval`, which shadows a builtin); `scene` stays separate from `render`.
 - Time: keyframes are integer ticks of `Project.timebase` (default 14400 ticks/s: divisible by 24, 25, 30, 48, 50, 60, 72, 90, 100, 120, 144); evaluation takes exact rational seconds; floats mean their shortest decimal (`0.1` = 1/10 s). Frame `i` samples at `i / fps`.
 - Easing kinds: `constant`, `linear`, `smoothstep`, `cubic-bezier` (x1, x2 in [0, 1]); owned by the outgoing key. Upstream's neighbour-aware "Auto" is deferred (D3).

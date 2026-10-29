@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Forward kinematics for bone trees. Pure functions over plain numbers; no model imports."""
 
 from __future__ import annotations

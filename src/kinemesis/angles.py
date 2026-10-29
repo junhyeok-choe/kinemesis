@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Angle helpers. Angles are radians; positive is counter-clockwise (y-up)."""
 
 from __future__ import annotations

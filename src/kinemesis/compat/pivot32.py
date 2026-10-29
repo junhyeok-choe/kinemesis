@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """The ``pivot32`` profile: float32 rounding of joint ends, as observed in the upstream reference.
 
 Used only to compare against oracle vectors (see ``fixtures/upstream-oracle``). It is not part of

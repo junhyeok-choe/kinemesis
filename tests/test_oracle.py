@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Equivalence with the upstream reference vectors (fixtures/upstream-oracle).
 
 These tests are the only evidence of upstream equivalence (compatibility level C2) and cover

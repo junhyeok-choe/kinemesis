@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Versioned project data. Plain dataclasses with no behavior beyond small lookups.
 
 Conventions (see docs/ARCHITECTURE-SPEC.md section 3.3):

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Exact time handling. Times are rational numbers of seconds."""
 
 from __future__ import annotations

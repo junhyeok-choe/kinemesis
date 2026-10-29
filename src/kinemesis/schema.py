@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """JSON Schema (draft 2020-12) for the strict project format. Kept in sync by tests."""
 
 from __future__ import annotations
