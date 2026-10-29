@@ -1,0 +1,543 @@
+{
+  "format": "kinemesis.project",
+  "schema_version": "0.1",
+  "name": "stick walker",
+  "fps": 24,
+  "timebase": 24,
+  "canvas": {
+    "width": 960.0,
+    "height": 540.0,
+    "background": "#ffffff"
+  },
+  "rigs": [
+    {
+      "id": "stick",
+      "bones": [
+        {
+          "id": "spine",
+          "parent": null,
+          "length": 70.0,
+          "rest_angle": 1.5707963267948966,
+          "kind": "line",
+          "thickness": 9.0,
+          "color": "#222222",
+          "fill": null,
+          "z": 0
+        },
+        {
+          "id": "head",
+          "parent": "spine",
+          "length": 34.0,
+          "rest_angle": 0.0,
+          "kind": "circle",
+          "thickness": 6.0,
+          "color": "#222222",
+          "fill": null,
+          "z": 1
+        },
+        {
+          "id": "arm_l",
+          "parent": "spine",
+          "length": 42.0,
+          "rest_angle": 2.356194490192345,
+          "kind": "line",
+          "thickness": 7.0,
+          "color": "#2a6fdb",
+          "fill": null,
+          "z": 0
+        },
+        {
+          "id": "forearm_l",
+          "parent": "arm_l",
+          "length": 38.0,
+          "rest_angle": -0.2617993877991494,
+          "kind": "line",
+          "thickness": 7.0,
+          "color": "#2a6fdb",
+          "fill": null,
+          "z": 0
+        },
+        {
+          "id": "arm_r",
+          "parent": "spine",
+          "length": 42.0,
+          "rest_angle": -2.356194490192345,
+          "kind": "line",
+          "thickness": 7.0,
+          "color": "#db4a2a",
+          "fill": null,
+          "z": 0
+        },
+        {
+          "id": "forearm_r",
+          "parent": "arm_r",
+          "length": 38.0,
+          "rest_angle": 0.2617993877991494,
+          "kind": "line",
+          "thickness": 7.0,
+          "color": "#db4a2a",
+          "fill": null,
+          "z": 0
+        },
+        {
+          "id": "leg_l",
+          "parent": null,
+          "length": 58.0,
+          "rest_angle": -1.8325957145940461,
+          "kind": "line",
+          "thickness": 8.0,
+          "color": "#2a6fdb",
+          "fill": null,
+          "z": 0
+        },
+        {
+          "id": "shin_l",
+          "parent": "leg_l",
+          "length": 56.0,
+          "rest_angle": 0.17453292519943295,
+          "kind": "line",
+          "thickness": 8.0,
+          "color": "#2a6fdb",
+          "fill": null,
+          "z": 0
+        },
+        {
+          "id": "leg_r",
+          "parent": null,
+          "length": 58.0,
+          "rest_angle": -1.3089969389957472,
+          "kind": "line",
+          "thickness": 8.0,
+          "color": "#db4a2a",
+          "fill": null,
+          "z": 0
+        },
+        {
+          "id": "shin_r",
+          "parent": "leg_r",
+          "length": 56.0,
+          "rest_angle": -0.17453292519943295,
+          "kind": "line",
+          "thickness": 8.0,
+          "color": "#db4a2a",
+          "fill": null,
+          "z": 0
+        }
+      ]
+    }
+  ],
+  "figures": [
+    {
+      "id": "walker",
+      "kind": "rig_figure",
+      "rig": "stick",
+      "x": -300.0,
+      "y": 0.0,
+      "scale": 1.0,
+      "rotation": 0.0
+    }
+  ],
+  "tracks": [
+    {
+      "figure": "walker",
+      "channel": "x",
+      "keys": [
+        {
+          "tick": 0,
+          "value": -300.0,
+          "easing": {
+            "kind": "linear"
+          }
+        },
+        {
+          "tick": 24,
+          "value": 0.0,
+          "easing": {
+            "kind": "linear"
+          }
+        },
+        {
+          "tick": 48,
+          "value": 300.0,
+          "easing": {
+            "kind": "linear"
+          }
+        }
+      ]
+    },
+    {
+      "figure": "walker",
+      "channel": "angle:leg_l",
+      "keys": [
+        {
+          "tick": 0,
+          "value": -1.8325957145940461,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 12,
+          "value": -1.1344640137963142,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 24,
+          "value": -1.8325957145940461,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 36,
+          "value": -2.530727415391778,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 48,
+          "value": -1.8325957145940461,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "figure": "walker",
+      "channel": "angle:leg_r",
+      "keys": [
+        {
+          "tick": 0,
+          "value": -1.3089969389957472,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 12,
+          "value": -2.007128639793479,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 24,
+          "value": -1.3089969389957472,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 36,
+          "value": -0.6108652381980153,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 48,
+          "value": -1.3089969389957472,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "figure": "walker",
+      "channel": "angle:shin_l",
+      "keys": [
+        {
+          "tick": 0,
+          "value": 0.17453292519943295,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 12,
+          "value": 0.8726646259971648,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 24,
+          "value": 0.17453292519943295,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 36,
+          "value": -0.08726646259971647,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 48,
+          "value": 0.17453292519943295,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "figure": "walker",
+      "channel": "angle:shin_r",
+      "keys": [
+        {
+          "tick": 0,
+          "value": -0.17453292519943295,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 12,
+          "value": -0.08726646259971647,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 24,
+          "value": -0.17453292519943295,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 36,
+          "value": -0.8726646259971648,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 48,
+          "value": -0.17453292519943295,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "figure": "walker",
+      "channel": "angle:arm_l",
+      "keys": [
+        {
+          "tick": 0,
+          "value": 2.356194490192345,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 24,
+          "value": 3.9269908169872414,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 48,
+          "value": 2.356194490192345,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "figure": "walker",
+      "channel": "angle:arm_r",
+      "keys": [
+        {
+          "tick": 0,
+          "value": -2.356194490192345,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 24,
+          "value": -3.9269908169872414,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        },
+        {
+          "tick": 48,
+          "value": -2.356194490192345,
+          "easing": {
+            "kind": "cubic-bezier",
+            "points": [
+              0.42,
+              0.0,
+              0.58,
+              1.0
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

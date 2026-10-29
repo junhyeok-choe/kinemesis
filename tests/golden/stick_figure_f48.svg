@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="-480 -270 960 540">
+<rect x="-480" y="-270" width="960" height="540" fill="#ffffff"/>
+<g transform="scale(1 -1)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<line data-figure="walker" data-bone="spine" x1="300" y1="0" x2="300" y2="70" stroke="#222222" stroke-width="9"/>
+<line data-figure="walker" data-bone="arm_l" x1="300" y1="70" x2="270.301515" y2="40.301515" stroke="#2a6fdb" stroke-width="7"/>
+<line data-figure="walker" data-bone="forearm_l" x1="270.301515" y1="40.301515" x2="237.39255" y2="21.301515" stroke="#2a6fdb" stroke-width="7"/>
+<line data-figure="walker" data-bone="arm_r" x1="300" y1="70" x2="329.698485" y2="40.301515" stroke="#db4a2a" stroke-width="7"/>
+<line data-figure="walker" data-bone="forearm_r" x1="329.698485" y1="40.301515" x2="362.60745" y2="21.301515" stroke="#db4a2a" stroke-width="7"/>
+<line data-figure="walker" data-bone="leg_l" x1="300" y1="0" x2="284.988495" y2="-56.023698" stroke="#2a6fdb" stroke-width="8"/>
+<line data-figure="walker" data-bone="shin_l" x1="284.988495" y1="-56.023698" x2="280.107774" y2="-111.810601" stroke="#2a6fdb" stroke-width="8"/>
+<line data-figure="walker" data-bone="leg_r" x1="300" y1="0" x2="315.011505" y2="-56.023698" stroke="#db4a2a" stroke-width="8"/>
+<line data-figure="walker" data-bone="shin_r" x1="315.011505" y1="-56.023698" x2="319.892226" y2="-111.810601" stroke="#db4a2a" stroke-width="8"/>
+<circle data-figure="walker" data-bone="head" cx="300" cy="87" r="17" fill="none" stroke="#222222" stroke-width="6"/>
+</g>
+</svg>

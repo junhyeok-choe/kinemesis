@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kinemesis"
+dynamic = ["version"]
+description = "Deterministic 2D rig animation engine (pre-alpha)"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [{ name = "Jun-Hyeok, Choe" }]
+keywords = ["animation", "2d", "kinematics", "rig", "keyframes", "svg"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Multimedia :: Graphics",
+  "Typing :: Typed",
+]
+dependencies = []
+
+[project.scripts]
+kinemesis = "kinemesis.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "hypothesis>=6", "ruff>=0.6", "mypy>=1.11", "jsonschema>=4", "types-jsonschema"]
+
+[tool.hatch.version]
+path = "src/kinemesis/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kinemesis"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+extend-exclude = ["fixtures"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+files = ["src", "tests"]
