@@ -399,3 +399,26 @@ Consequences for the plan:
 3. The ±π tie behavior is a real, observable divergence risk and is promoted to a **review item that M0 must close** (choose: match upstream's sign-of-sin behavior in the `pivot32` profile only, and define a deterministic rule such as "tie → positive" for the native profile).
 4. Remaining C2 gaps to fill before any compatibility claim: bends in tweens, joins, Auto with neighbours, legacy PCHIP, color/opacity, camera, IK Both-mode.
 5. None of these results establish equivalence with **Pivot Animator**; they establish equivalence with StykAnimate @ `def97214…` for the listed vectors only.
+
+---
+
+## 11. M1 implementation status (2026-10-29, written after implementation; supersedes planning text where they differ)
+
+The user authorized starting implementation immediately after approving D1–D5 and the skeleton commit (the independent architecture review requested in the original brief has **not** happened; M1 is therefore provisional and should be reviewed with this spec).
+
+Implemented in `src/kinemesis/` (zero runtime dependencies; Python 3.12 and 3.14 tested): `model`, `validation`, `serialization` (+ `schema`), `angles`, `easing`, `timeutil`, `kinematics`, `evaluation`, `scene`, `render/svg`, `api`, `cli`, `compat/pivot32`. 85 tests pass on 3.12.3 and 3.14.2, `ruff` and `mypy --strict` clean.
+
+Deviations from the proposal, and decisions made while implementing (all reviewable, none user-approved):
+- Module named `evaluation` (not `eval`, which shadows a builtin); `scene` stays separate from `render`.
+- Time: keyframes are integer ticks of `Project.timebase` (default 14400 ticks/s: divisible by 24, 25, 30, 48, 50, 60, 72, 90, 100, 120, 144); evaluation takes exact rational seconds; floats mean their shortest decimal (`0.1` = 1/10 s). Frame `i` samples at `i / fps`.
+- Easing kinds: `constant`, `linear`, `smoothstep`, `cubic-bezier` (x1, x2 in [0, 1]); owned by the outgoing key. Upstream's neighbour-aware "Auto" is deferred (D3).
+- Channels: `x`, `y`, `scale`, `rotation` (scalars; full turns kept) and `angle:<bone>` (local, shortest arc; exact ties turn counter-clockwise). Before a track's first key the figure/rig default applies; after the last key the value holds.
+- Coordinates: y-up, origin at canvas center; SVG renderer flips y with a `scale(1 -1)` group. Circle bones: diameter spans the bone. Scale multiplies lengths and stroke widths.
+- Strict loader rejects unknown fields (`unknown_field` with JSON-pointer path); lenient keeps them in `extras` and writes them back; duplicate keys, NaN/Infinity, oversize and over-deep documents are rejected with codes.
+- Layering is enforced by a test (`tests/test_svg_cli_arch.py`), as is "core imports only the standard library".
+
+Oracle results with the real implementation (`tests/test_oracle.py`):
+- FK (10 straight-segment vectors): within the derived bound `(depth+1)·ulp32` in both float64 and `pivot32` profiles; in `pivot32` all 55 of 55 compared joints are bit-identical to the oracle (the test asserts >= 90%; measured 100%); in plain float64 none are identical, as expected from float32 quantization.
+- Native tween: 98 samples across linear/constant/ease-in/ease-out/bezier, a 170° wrap and a duration-1 case agree within 1e-9 (root x within 1e-9 × span).
+- **Deliberate divergence:** at an *exact* ±π step the engine turns counter-clockwise; upstream's direction depends on rounding. Three vectors (`wrap-exact-pi`, `wrap-minus-pi`, `wrap-3pi`; the tie can occur in a child bone's relative angle) are excluded from equality and tested for determinism instead.
+- **Not covered:** bend/arc FK (M2; the `bend` vector is skipped by name), upstream Auto easing and zero-duration keyframes (listed in `UNSUPPORTED`), IK of any kind, joins, colour/opacity/camera/background.
